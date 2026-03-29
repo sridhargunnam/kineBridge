@@ -1,1 +1,4 @@
-# kineBridge
+# kineBridge 
+
+Project KineBridge: From First Principles to Diffusion Policies
+A comprehensive, foundational robotics project designed to build a deep, intuitive understanding of robotic manipulation. The project starts by implementing Forward and Inverse Kinematics (FK/IK) from scratch for complex multi-DOF arms using pure NumPy/SciPy and MuJoCo. Once the classical mathematical foundation is established, the project transitions into modern data-driven approaches. It utilizes PyTorch to train Multi-Layer Perceptrons, Transformer-based sequence models, and state-of-the-art Diffusion Policies on egocentric teleoperation datasets. The ultimate goal is to create a robust, end-to-end framework capable of retargeting human demonstrations (via VR/Quest) to a 7-DOF robot arm using a blend of analytical solvers and modern AI.
