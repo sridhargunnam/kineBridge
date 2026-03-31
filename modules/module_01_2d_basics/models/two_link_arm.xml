@@ -1,0 +1,73 @@
+<!--
+Module 1, Step 5: MJCF Model for a 2-Link Planar Arm
+
+Reference: theory.md — Section 1.6
+
+YOUR TASK:
+    Fill in the TODO sections to create a 2-link planar arm.
+    The structure mirrors the FK math: nested bodies = kinematic chain.
+
+    Link 1: length L1 = 1.0
+    Link 2: length L2 = 0.8
+
+    Key concept: The <body> for link2 is NESTED INSIDE the <body> for link1.
+    Its pos="1.0 0 0" means "offset by L1 along x from link1's origin."
+    This is exactly how cumulative angles work in the FK math!
+
+Hints:
+    - Both joints are hinge type, axis="0 0 1" (z-axis rotation)
+    - Use capsule geoms with fromto for each link
+    - Place a site at the tip of link2 for end-effector tracking
+    - Use different rgba colors for each link so they're visually distinct
+-->
+<mujoco model="two_link_arm">
+    <option gravity="0 0 0" timestep="0.001"/>
+
+    <default>
+        <joint damping="0.5"/>
+        <geom contype="0" conaffinity="0"/>
+    </default>
+
+    <worldbody>
+        <!-- Ground plane and lighting (provided) -->
+        <light name="top" pos="0 0 2" dir="0 0 -1" diffuse="1 1 1"/>
+        <geom name="floor" type="plane" size="3 3 0.1" rgba="0.9 0.9 0.9 1"
+              pos="0 0 -0.5" contype="0" conaffinity="0"/>
+
+        <!-- Base marker (provided) -->
+        <site name="base" pos="0 0 0" size="0.05" rgba="0 0.8 0 1"/>
+
+        <!-- === TODO START ===
+        Create the 2-link arm. The structure should be:
+
+        <body name="link1" pos="0 0 0">
+            1. Joint: hinge, axis z, named "joint1"
+            2. Geom: capsule from (0,0,0) to (L1,0,0), radius 0.04
+                     rgba="0.3 0.5 0.8 1" (blue)
+
+            <body name="link2" pos="L1 0 0">   ← NESTED inside link1!
+                3. Joint: hinge, axis z, named "joint2"
+                4. Geom: capsule from (0,0,0) to (L2,0,0), radius 0.035
+                         rgba="0.8 0.3 0.3 1" (red)
+                5. Site: named "end_effector", at pos (L2, 0, 0)
+
+            </body>
+        </body>
+
+        Remember:
+        - L1 = 1.0, L2 = 0.8
+        - link2's pos="1.0 0 0" is RELATIVE to link1's frame
+        - link2's geom fromto starts at (0,0,0) because it's in link2's frame
+        === TODO END === -->
+
+    </worldbody>
+
+    <!-- === TODO START ===
+    Add actuators for both joints. Use position control:
+        <actuator>
+            <position joint="joint1" kp="10"/>
+            <position joint="joint2" kp="10"/>
+        </actuator>
+    === TODO END === -->
+
+</mujoco>

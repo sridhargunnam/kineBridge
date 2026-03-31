@@ -1,0 +1,69 @@
+<!--
+Module 1, Step 2: MJCF Model for a 1-Link Planar Arm
+
+Reference: theory.md — Section 1.6
+
+YOUR TASK:
+    Fill in the TODO sections to create a 1-link planar arm:
+    - One body (link1) attached to the worldbody
+    - One hinge joint rotating about the z-axis
+    - One capsule geom representing the link (length L=1.0)
+    - One site at the tip to track end-effector position
+    - One motor actuator to control the joint
+
+Hints:
+    - For a 2D arm in the xy-plane, joints rotate about axis="0 0 1" (z-axis)
+    - Use geom type="capsule" with fromto="0 0 0  L 0 0"
+    - Place the site at pos="L 0 0" (the tip of the link)
+    - The body pos should be at the origin since this is the first link
+-->
+<mujoco model="one_link_arm">
+    <option gravity="0 0 0" timestep="0.001"/>
+
+    <default>
+        <joint damping="0.5"/>
+        <geom rgba="0.3 0.5 0.8 1" contype="0" conaffinity="0"/>
+    </default>
+
+    <worldbody>
+        <!-- Ground plane and lighting (provided) -->
+        <light name="top" pos="0 0 2" dir="0 0 -1" diffuse="1 1 1"/>
+        <geom name="floor" type="plane" size="3 3 0.1" rgba="0.9 0.9 0.9 1"
+              pos="0 0 -0.5" contype="0" conaffinity="0"/>
+
+        <!-- Base marker (provided) -->
+        <site name="base" pos="0 0 0" size="0.05" rgba="0 0.8 0 1"/>
+
+        <!-- === TODO START ===
+        Create the 1-link arm here. You need:
+
+        1. A <body> named "link1" positioned at the origin
+           Inside it:
+           a. A <joint> named "joint1"
+              - type: hinge
+              - axis: rotation about z (for 2D motion in xy-plane)
+           b. A <geom> for the link
+              - type: capsule
+              - fromto: from origin to (1.0, 0, 0) — link length L=1.0
+              - size: 0.04 (radius)
+           c. A <site> named "end_effector"
+              - pos: at the tip of the link (1.0, 0, 0)
+              - size: 0.03
+            
+        === TODO END === -->
+        <body name="link1" pos="0 0 0">
+            <joint name="joint1" type="hinge" axis="0 0 1"/>
+            <geom name="link1" type="capsule" fromto="0 0 0 1 0 0" size="0.04"/>
+            <site name="end_effector" pos="1 0 0" size="0.03"/>
+        </body>
+    </worldbody>
+
+    <!-- === TODO START ===
+    Add an <actuator> section with a position actuator for joint1.
+    Use: <position joint="joint1" kp="10"/>
+    === TODO END === -->
+    <actuator>
+        <position name="joint1_ctrl" joint="joint1" kp="10"/>
+    </actuator>
+
+</mujoco>

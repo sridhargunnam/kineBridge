@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MuJoCo
+*.mjb
+
+# Run logs
+runlogs/
+
+# Data artifacts
+data/
+*.hdf5
+*.h5
+*.npy
+*.npz
+*.pkl
+
+# Model checkpoints
+checkpoints/
+*.pt
+*.pth
+
+# Rendered outputs
+renders/
+*.mp4
+*.avi
+*.gif
+
+# OS
+.DS_Store
+Thumbs.db
