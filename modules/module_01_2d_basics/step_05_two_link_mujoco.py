@@ -85,7 +85,25 @@ def ik_to_mujoco(target_x: float, target_y: float) -> dict:
     #    f. Collect results
     #
     # 4. Return results dict
-    raise NotImplementedError("Implement ik_to_mujoco")
+    # raise NotImplementedError("Implement ik_to_mujoco")
+    solutions = inverse_kinematics_2link(target_x, target_y, L1, L2)
+    if not solutions: return {"target": (target_x, target_y), "solutions": []}
+    results = []
+    model, data = load_model_and_data(str(MODEL_XML))
+    for theta1, theta2 in solutions:
+        data.qpos[0] = theta1
+        data.qpos[1] = theta2
+        mujoco.mj_forward(model, data)
+        mujoco_ee = data.site_xpos[model.site('end_effector').id].copy()
+        _, numpy_ee = forward_kinematics_2link(theta1, theta2, L1, L2)
+        error = np.linalg.norm(mujoco_ee[:2] - [target_x, target_y])
+        results.append({
+            "angles_deg": (np.degrees(theta1), np.degrees(theta2)),
+            "mujoco_ee": mujoco_ee,
+            "numpy_ee": numpy_ee,
+            "error": error,
+        })
+    return {"target": (target_x, target_y), "solutions": results}
     # === TODO END ===
 
 

@@ -89,7 +89,20 @@ def inverse_kinematics_2link(
     #
     # Step 4: Remove duplicates (when at workspace boundary)
     #   Return unique solutions.
-    raise NotImplementedError("Implement inverse_kinematics_2link")
+    # raise NotImplementedError("Implement inverse_kinematics_2link")
+    d_sq = x**2 + y**2
+    d = np.sqrt(d_sq)
+    if d > L1 + L2 or d < abs(L1 - L2): return []
+    cos_theta2 = (d_sq - L1**2 - L2**2) / (2 * L1 * L2)
+    cos_theta2 = np.clip(cos_theta2, -1, 1)
+    theta2_options = [np.arccos(cos_theta2), -np.arccos(cos_theta2)]
+    solutions = []
+    for theta2 in theta2_options:
+        k1 = L1 + L2 * np.cos(theta2)
+        k2 = L2 * np.sin(theta2)
+        theta1 = np.arctan2(y, x) - np.arctan2(k2, k1)
+        solutions.append((theta1, theta2))
+    return solutions
     # === TODO END ===
 
 

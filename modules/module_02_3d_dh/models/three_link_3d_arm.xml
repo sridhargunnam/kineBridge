@@ -1,0 +1,91 @@
+<!--
+Module 2, Step 4: MJCF Model for a 3-Link 3D Arm
+
+Reference: theory.md — Sections 2.4, 2.5, 2.6
+
+This arm has 3 revolute joints that move in 3D space:
+    Joint 1: Rotates about z-axis (base rotation, like a turntable)
+    Joint 2: Rotates about y-axis (shoulder pitch, lifts arm up/down)
+    Joint 3: Rotates about y-axis (elbow pitch)
+
+Link lengths: L1 = 0.0 (base rotation), L2 = 1.0 (upper arm), L3 = 0.8 (forearm)
+Base height: 0.5 (the shoulder sits 0.5m above ground)
+
+YOUR TASK:
+    Fill in the TODO sections to create the 3-link 3D arm.
+    This is your first arm that moves OUT of a single plane.
+
+Hints:
+    - Joint 1 (base): axis="0 0 1" (z-axis rotation)
+    - Joint 2 (shoulder): axis="0 1 0" (y-axis rotation = pitch)
+    - Joint 3 (elbow): axis="0 1 0" (y-axis rotation = pitch)
+    - Use joint limits via: limited="true" range="-170 170"
+    - Position child bodies at the END of the parent link
+    - Link 2 extends along z (upward from shoulder) or x (forward)
+-->
+<mujoco model="three_link_3d_arm">
+    <compiler angle="degree"/>
+    <option gravity="0 0 -9.81" timestep="0.002"/>
+
+    <default>
+        <joint damping="1.0" limited="true"/>
+        <geom contype="0" conaffinity="0"/>
+    </default>
+
+    <worldbody>
+        <!-- Lighting and ground (provided) -->
+        <light name="top" pos="0 0 3" dir="0 0 -1" diffuse="0.8 0.8 0.8"/>
+        <light name="front" pos="2 -2 2" dir="-1 1 -1" diffuse="0.5 0.5 0.5"/>
+        <geom name="floor" type="plane" size="3 3 0.1" rgba="0.9 0.9 0.9 1"
+              pos="0 0 0" contype="0" conaffinity="0"/>
+
+        <!-- Base pedestal (provided) — a fixed box the arm sits on -->
+        <geom name="base_pedestal" type="cylinder" size="0.08 0.25"
+              pos="0 0 0.25" rgba="0.4 0.4 0.4 1"/>
+        <site name="base" pos="0 0 0.5" size="0.03" rgba="0 0.8 0 1"/>
+
+        <!-- === TODO START ===
+        Build the 3-link 3D arm. Structure:
+
+        <body name="base_rotator" pos="0 0 0.5">
+            Joint 1: hinge about z-axis, range "-170 170"
+            Geom: small cylinder or sphere at the base rotation point
+
+            <body name="upper_arm" pos="0 0 0">
+                Joint 2: hinge about y-axis (shoulder pitch), range "-120 120"
+                Geom: capsule extending along z, length L2=1.0
+                      fromto="0 0 0  0 0 1.0" (upward along local z)
+                      size="0.04", rgba="0.3 0.5 0.8 1"
+
+                <body name="forearm" pos="0 0 1.0">
+                    Joint 3: hinge about y-axis (elbow pitch), range "-140 140"
+                    Geom: capsule extending along z, length L3=0.8
+                          fromto="0 0 0  0 0 0.8"
+                          size="0.035", rgba="0.8 0.3 0.3 1"
+                    Site: "end_effector" at pos="0 0 0.8"
+
+                </body>
+            </body>
+        </body>
+
+        Key points:
+        - base_rotator is at the top of the pedestal (pos="0 0 0.5")
+        - upper_arm starts at base_rotator origin (pos="0 0 0")
+        - forearm starts at the tip of upper_arm (pos="0 0 1.0")
+        - Links extend along LOCAL z-axis (they point "up" at rest)
+        - Joint 1 (z-axis) swivels the whole arm left/right
+        - Joints 2,3 (y-axis) pitch the arm forward/backward
+        === TODO END === -->
+
+    </worldbody>
+
+    <!-- === TODO START ===
+    Add position actuators for all three joints:
+    <actuator>
+        <position joint="joint1" kp="50"/>
+        <position joint="joint2" kp="50"/>
+        <position joint="joint3" kp="50"/>
+    </actuator>
+    === TODO END === -->
+
+</mujoco>

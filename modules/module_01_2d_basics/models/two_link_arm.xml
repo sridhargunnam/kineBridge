@@ -59,7 +59,15 @@ Hints:
         - link2's pos="1.0 0 0" is RELATIVE to link1's frame
         - link2's geom fromto starts at (0,0,0) because it's in link2's frame
         === TODO END === -->
-
+        <body name="link1" pos="0 0 0">
+            <joint name="joint1" type="hinge" axis="0 0 1"/>
+            <geom name="link1" type="capsule" fromto="0 0 0 1 0 0" size="0.04" rgba="0.3 0.5 0.8 1"/>
+            <body name="link2" pos="1 0 0">
+                <joint name="joint2" type="hinge" axis="0 0 1"/>
+                <geom name="link2" type="capsule" fromto="0 0 0 0.8 0 0" size="0.035" rgba="0.8 0.3 0.3 1"/>
+                <site name="end_effector" pos="0.8 0 0" size="0.05" rgba="0 0.8 0 1"/>
+            </body>
+        </body>
     </worldbody>
 
     <!-- === TODO START ===
@@ -69,5 +77,8 @@ Hints:
             <position joint="joint2" kp="10"/>
         </actuator>
     === TODO END === -->
-
+    <actuator>
+        <position name="joint1_ctrl" joint="joint1" kp="10"/>
+        <position name="joint2_ctrl" joint="joint2" kp="10"/>
+    </actuator>
 </mujoco>

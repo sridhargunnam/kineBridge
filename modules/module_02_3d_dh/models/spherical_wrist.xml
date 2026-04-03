@@ -1,0 +1,120 @@
+<!--
+Module 2, Step 5: MJCF Model for a 3-Link Arm + Spherical Wrist (6-DOF)
+
+Reference: theory.md — Sections 2.4 (Spherical Wrist), 2.6
+
+This model combines:
+    - 3-link arm (joints 1-3) from Step 4 for POSITIONING
+    - 3-joint spherical wrist (joints 4-6) for ORIENTATION
+
+Total: 6 DOF — enough to reach any position AND orientation in 3D.
+
+The wrist joints all intersect at a single point (the "wrist center").
+Their axes alternate: z, y, z (or equivalently, with DH twists of ±π/2).
+
+Arm parameters (same as step_04):
+    Joint 1: revolute z (base rotation)
+    Joint 2: revolute y (shoulder pitch), L2 = 1.0
+    Joint 3: revolute y (elbow pitch), L3 = 0.8
+
+Wrist parameters:
+    Joint 4: revolute z (wrist roll)
+    Joint 5: revolute y (wrist pitch)
+    Joint 6: revolute z (tool roll)
+    Wrist-to-tool offset: 0.1 (small end-effector)
+
+YOUR TASK:
+    Fill in the TODO sections to add the 3-joint spherical wrist
+    to the end of the 3-link arm.
+
+Hints:
+    - All three wrist joints share the SAME body origin (wrist center)
+      at the tip of link 3 — their "link lengths" are 0.
+    - Use small geoms (spheres) at the wrist to show joint locations.
+    - The final body has the end-effector site offset by 0.1 along z.
+    - Alternating axes: z, y, z gives full orientation capability.
+-->
+<mujoco model="spherical_wrist_arm">
+    <compiler angle="degree"/>
+    <option gravity="0 0 -9.81" timestep="0.002"/>
+
+    <default>
+        <joint damping="0.5" limited="true"/>
+        <geom contype="0" conaffinity="0"/>
+    </default>
+
+    <worldbody>
+        <light name="top" pos="0 0 3" dir="0 0 -1" diffuse="0.8 0.8 0.8"/>
+        <light name="front" pos="2 -2 2" dir="-1 1 -1" diffuse="0.5 0.5 0.5"/>
+        <geom name="floor" type="plane" size="3 3 0.1" rgba="0.9 0.9 0.9 1"/>
+
+        <!-- Base pedestal (provided) -->
+        <geom name="base_pedestal" type="cylinder" size="0.08 0.25"
+              pos="0 0 0.25" rgba="0.4 0.4 0.4 1"/>
+
+        <!-- Arm (provided) — same as step_04 -->
+        <body name="base_rotator" pos="0 0 0.5">
+            <joint name="joint1" type="hinge" axis="0 0 1" range="-170 170"/>
+            <geom name="base_geom" type="cylinder" size="0.06 0.03"
+                  rgba="0.5 0.5 0.5 1"/>
+
+            <body name="upper_arm" pos="0 0 0">
+                <joint name="joint2" type="hinge" axis="0 1 0" range="-120 120"/>
+                <geom name="upper_arm_geom" type="capsule"
+                      fromto="0 0 0  0 0 1.0" size="0.04" rgba="0.3 0.5 0.8 1"/>
+
+                <body name="forearm" pos="0 0 1.0">
+                    <joint name="joint3" type="hinge" axis="0 1 0" range="-140 140"/>
+                    <geom name="forearm_geom" type="capsule"
+                          fromto="0 0 0  0 0 0.8" size="0.035" rgba="0.8 0.3 0.3 1"/>
+
+                    <!-- === TODO START ===
+                    Add the spherical wrist at the tip of the forearm.
+
+                    The wrist center is at pos="0 0 0.8" (tip of forearm).
+                    All three wrist joints effectively share this point.
+
+                    Structure:
+                    <body name="wrist_roll" pos="0 0 0.8">
+                        Joint 4: hinge, axis z (0 0 1), range "-170 170"
+                        Geom: sphere size="0.03" for visualization
+
+                        <body name="wrist_pitch" pos="0 0 0">
+                            Joint 5: hinge, axis y (0 1 0), range "-120 120"
+                            Geom: sphere size="0.025"
+
+                            <body name="tool_roll" pos="0 0 0">
+                                Joint 6: hinge, axis z (0 0 1), range "-170 170"
+                                Geom: small cylinder for the tool
+                                      type="cylinder" size="0.02 0.05"
+                                      fromto="0 0 0  0 0 0.1"
+                                      rgba="0.2 0.8 0.2 1"
+                                Site: "end_effector" at pos="0 0 0.1"
+
+                            </body>
+                        </body>
+                    </body>
+
+                    Key insight: pos="0 0 0" for wrist_pitch and tool_roll
+                    means all three wrist axes INTERSECT at the wrist center.
+                    This is what makes it a "spherical" wrist.
+                    === TODO END === -->
+
+                </body>
+            </body>
+        </body>
+    </worldbody>
+
+    <!-- === TODO START ===
+    Add position actuators for all 6 joints:
+    <actuator>
+        <position joint="joint1" kp="50"/>
+        <position joint="joint2" kp="50"/>
+        <position joint="joint3" kp="50"/>
+        <position joint="joint4" kp="20"/>
+        <position joint="joint5" kp="20"/>
+        <position joint="joint6" kp="20"/>
+    </actuator>
+    === TODO END === -->
+
+</mujoco>

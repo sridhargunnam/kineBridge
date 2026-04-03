@@ -69,7 +69,12 @@ def forward_kinematics_2link(
     # Step 3: Return as numpy arrays
     #   elbow_pos = np.array([x1, y1])
     #   ee_pos = np.array([x2, y2])
-    raise NotImplementedError("Implement forward_kinematics_2link")
+    # raise NotImplementedError("Implement forward_kinematics_2link")
+    x1 = L1 * np.cos(theta1)
+    y1 = L1 * np.sin(theta1)
+    x2 = x1 + L2 * np.cos(theta1 + theta2)
+    y2 = y1 + L2 * np.sin(theta1 + theta2)
+    return np.array([x1, y1]), np.array([x2, y2])
     # === TODO END ===
 
 
